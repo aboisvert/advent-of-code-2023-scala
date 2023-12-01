@@ -12,5 +12,5 @@ import scala.io.Source
 
 def calibrationValue(line: String): Int =
   val firstDigit = line.find(Character.isDigit).get
-  val lastDigit = line.reverse.find(Character.isDigit).get
+  val lastDigit  = line.findLast(Character.isDigit).get
   (firstDigit.toString + lastDigit).toInt

@@ -27,9 +27,13 @@ val numerals = digitsAsLetters
   ++ digitsAsLetters.map { n => Numeral(n.chars, n.value) }
 
 def calibrationValuePart2(line: String): Int =
-  val left = numerals.minBy: n =>
-    line.indexOf(n.chars) match
-      case -1 => Int.MaxValue
-      case i  => i
-  val right = numerals.maxBy { n => line.lastIndexOf(n.chars) }
-  (left.value * 10) + right.value
+  val left = numerals
+    .minBy: n =>
+      line.indexOf(n.chars) match
+        case -1 => Int.MaxValue
+        case i  => i
+    .value
+
+  val right = numerals.maxBy { n => line.lastIndexOf(n.chars) }.value
+
+  (left * 10) + right

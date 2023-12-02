@@ -5,7 +5,7 @@ package day02
     .fromFile("day02/input.txt")
     .getLines
     .map(parseGame)
-    .map { _.power }
+    .map(_.power)
     .sum
   println(sum)
 
@@ -18,4 +18,5 @@ extension (g: Game)
         blue = math.max(p1.blue, p2.blue),
       )
     maxPick.red * maxPick.green * maxPick.blue
+  end power
 

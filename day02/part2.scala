@@ -12,7 +12,6 @@ package day02
 extension (g: Game)
   def power =
     g.picks.maxBy(_.red).red *
-    g.picks.maxBy(_.green).green *
-    g.picks.maxBy(_.blue).blue
+      g.picks.maxBy(_.green).green *
+      g.picks.maxBy(_.blue).blue
   end power
-

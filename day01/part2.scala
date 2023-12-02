@@ -10,7 +10,7 @@ package day01
 
 case class Numeral(chars: String, value: Int)
 
-val digitsAsLetters = Set(
+val letterNumerals = Set(
   Numeral("one", 1),
   Numeral("two", 2),
   Numeral("three", 3),
@@ -22,18 +22,22 @@ val digitsAsLetters = Set(
   Numeral("nine", 9)
 )
 
-// Add literal digits: ("1" -> 1), ("2" -> 2), etc.
-val numerals = digitsAsLetters
-  ++ digitsAsLetters.map { n => Numeral(n.chars, n.value) }
+// Digit numerals: ("1" -> 1), ("2" -> 2), etc.
+val digitNumerals = letterNumerals.map { n => Numeral(n.chars, n.value) }
+
+val numerals = letterNumerals ++ digitNumerals
 
 def calibrationValuePart2(line: String): Int =
-  val left = numerals
+  val leftDigit = numerals
     .minBy: n =>
       line.indexOf(n.chars) match
         case -1 => Int.MaxValue
         case i  => i
     .value
 
-  val right = numerals.maxBy { n => line.lastIndexOf(n.chars) }.value
+  val rightDigit = numerals
+    .maxBy: n =>
+      line.lastIndexOf(n.chars)
+    .value
 
-  (left * 10) + right
+  (leftDigit * 10) + rightDigit

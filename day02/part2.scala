@@ -11,12 +11,8 @@ package day02
 
 extension (g: Game)
   def power =
-    val maxPick = g.picks.reduce: (p1, p2) =>
-      Pick(
-        red = math.max(p1.red, p2.red),
-        green = math.max(p1.green, p2.green),
-        blue = math.max(p1.blue, p2.blue),
-      )
-    maxPick.red * maxPick.green * maxPick.blue
+    g.picks.maxBy(_.red).red *
+    g.picks.maxBy(_.green).green *
+    g.picks.maxBy(_.blue).blue
   end power
 

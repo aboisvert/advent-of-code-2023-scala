@@ -27,13 +27,13 @@ def parseGame(line: String): Game =
   val Array(gameStr, picksStr) = line.split(":")
   val Array(_, id) = gameStr.split(" ")
   val picks = for pickSet <- picksStr.split(";") yield
-    val picksMap = (for
+    val colorMap = (for
       randomCubes <- pickSet.split(",")
       Array(n, color) = randomCubes.trim.split(" ")
     yield (color, n.toInt)).toMap
     Pick(
-      red = picksMap.getOrElse("red", 0),
-      green = picksMap.getOrElse("green", 0),
-      blue = picksMap.getOrElse("blue", 0)
+      red = colorMap.getOrElse("red", 0),
+      green = colorMap.getOrElse("green", 0),
+      blue = colorMap.getOrElse("blue", 0)
     )
   Game(id.toInt, picks)

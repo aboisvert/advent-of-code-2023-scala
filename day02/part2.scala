@@ -8,6 +8,7 @@ package day02
     .map(_.power)
     .sum
   println(sum)
+end part2
 
 extension (g: Game)
   def power =

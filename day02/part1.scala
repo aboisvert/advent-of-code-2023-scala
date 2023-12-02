@@ -13,6 +13,7 @@ package day02
     .map { _.id }
     .sum
   println(sum)
+end part1
 
 case class Game(id: Int, picks: Seq[Pick])
 
@@ -37,3 +38,4 @@ def parseGame(line: String): Game =
       blue = colorMap.getOrElse("blue", 0)
     )
   Game(id.toInt, picks)
+end parseGame

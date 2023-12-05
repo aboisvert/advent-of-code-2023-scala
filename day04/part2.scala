@@ -28,12 +28,11 @@ class CardInstances:
   def apply(cardId: Int) = instancesMap.getOrElse(cardId, 1)
 
   /** Increment the count of `cardId` */
-  def increment(cardId: Int, inc: Int) = instancesMap(cardId) =
-    apply(cardId) + inc
+  def increment(cardId: Int, inc: Int) =
+    instancesMap(cardId) = apply(cardId) + inc
 
   /** Get the value of `cardId` then discard its value. */
   def getValueAndDiscard(cardId: Int) = instancesMap.remove(cardId).getOrElse(1)
-
 end CardInstances
 
 extension (c: Scratchcard)

@@ -6,37 +6,45 @@ package day03
     .getLines
     .toArray
     .map(_.toArray)
-  val parts = validPartNumbers(using Schematic(grid))
-  println(parts.map(_.digits.toInt).sum)
+  val sum = Schematic(grid).validPartNumbers
+    .map(_.digits.toInt)
+    .sum
+  println(sum)
 
 case class Schematic(grid: Array[Array[Char]]):
+  /** Returns the character at position (x, y), or '.' as default */
   def charAt(x: Int, y: Int): Char =
     if x < 0 || y < 0 || y >= grid.length || x >= grid(y).length then '.'
     else grid(y)(x)
+
+  /** Returns the PartNumber at (x, y), or None */
+  def possiblePartNumberAt(x: Int, y: Int): Option[PartNumber] =
+    if charAt(x, y).isDigit && !charAt(x - 1, y).isDigit then
+      val digits = grid(y).iterator.drop(x).takeWhile(_.isDigit).toArray
+      Some(PartNumber(String.valueOf(digits), x, y))
+    else None
+
+  /** Returns an iterator of all PartNumbers in the schematic */
+  def validPartNumbers: Iterator[PartNumber] =
+    for
+      (line, y) <- grid.iterator.zipWithIndex
+      x <- line.indices
+      part <- possiblePartNumberAt(x, y) if part.hasAdjacentSymbol(using this)
+    yield part
+
 end Schematic
 
-extension (c: Char) def isSymbol = !c.isDigit && !(c == '.')
+extension (c: Char)
+  /** A char is a symbol if it's not a digit and not a dot ('.') */
+  def isSymbol = !c.isDigit && !(c == '.')
 
 case class PartNumber(digits: String, x: Int, y: Int):
+  /** Returns true if this part number has an adjacent symbol, false otherwise
+    */
   def hasAdjacentSymbol(using schematic: Schematic): Boolean =
-    (for
-      x1 <- (x - 1) to (x + digits.size)
+    val adjacentChars = for
+      x1 <- ((x - 1) to (x + digits.size)).iterator
       y1 <- (y - 1) to (y + 1)
-    yield schematic.charAt(x1, y1))
-      .exists(_.isSymbol)
+    yield schematic.charAt(x1, y1)
+    adjacentChars.exists(_.isSymbol)
 end PartNumber
-
-def possiblePartNumberAt(x: Int, y: Int)(using
-    schematic: Schematic
-): Option[PartNumber] =
-  if schematic.charAt(x, y).isDigit && !schematic.charAt(x - 1, y).isDigit then
-    val digits = schematic.grid(y).iterator.drop(x).takeWhile(_.isDigit).toArray
-    Some(PartNumber(String.valueOf(digits), x, y))
-  else None
-
-def validPartNumbers(using schematic: Schematic): Iterator[PartNumber] =
-  for
-    (line, y) <- schematic.grid.iterator.zipWithIndex
-    x <- line.indices
-    part <- possiblePartNumberAt(x, y) if part.hasAdjacentSymbol
-  yield part

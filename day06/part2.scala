@@ -7,6 +7,7 @@ import scala.io.Source
     .fromFile("day06/input.txt")
     .getLines
   val race = parseRaceWithBadKerning(lines)
+  println(race.winningSolutions)
   println(race.optimizedWinningSolutions)
 
 def parseRaceWithBadKerning(lines: Iterator[String]): Race =
@@ -16,6 +17,7 @@ def parseRaceWithBadKerning(lines: Iterator[String]): Race =
   )
 
 extension (r: Race)
+  /** Returns the count of winning solutions using algebraic optimization. */
   def optimizedWinningSolutions =
     // system of equations is:
     //
@@ -38,17 +40,17 @@ extension (r: Race)
     //       b = raceTime
     //       c = -recordDistance
     //
-    //     pushTime = -b +/ sqrt(b^2 - 4ac) / 2a
+    //     pushTime = -b +/- sqrt(b^2 - 4ac) / 2a
     //
     //     pushTime =  -raceTime +/- sqrt(raceTime^2 - (4 * -1 * -recordDistance)) / ( 2 * -1)
     //              =  -racetime +/- sqrt(raceTime^2 - (4 * recordDistance)) / -2
 
     import r.{raceTime, recordDistance}
-    import math.{abs, floor, sqrt, pow}
+    import math.{abs, sqrt, pow}
 
-    val solution1 = (0.0d - raceTime) + //
-      sqrt(pow(raceTime, 2.0d) - (4.0d * recordDistance)) / -2.0d
-    val solution2 = (0.0d - raceTime) - //
-      sqrt(pow(raceTime, 2.0d) - (4.0d * recordDistance)) / -2.0d
+    val solution1 =
+      -raceTime + sqrt(pow(raceTime, 2.0d) - (4.0d * recordDistance)) / -2.0d
+    val solution2 =
+      -raceTime - sqrt(pow(raceTime, 2.0d) - (4.0d * recordDistance)) / -2.0d
 
-    floor(abs(solution1 - solution2)).toLong
+    solution2.floor.toLong - solution1.ceil.toLong

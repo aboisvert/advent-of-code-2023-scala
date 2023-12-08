@@ -4,19 +4,22 @@ enum HandType:
   case FiveOfKind, FourOfKind, FullHouse, ThreeOfKind, TwoPairs, OnePair,
     HighCard
 
+import HandType.*
+
 def handType(cards: Seq[Char]): HandType =
-  import HandType.*
   // group, count and sort similar cards together,
   // e.g., 44TT4 => Seq(card='4' -> count=3, card='T' -> count=2)
-  val cardCount: Seq[(Char, Int)] =
-    cards.groupBy(identity).mapValues(_.size).toSeq.sortBy(-_._2)
-  if cardCount(0)._2 == 5 then FiveOfKind
-  else if cardCount(0)._2 == 4 then FourOfKind
-  else if cardCount(0)._2 == 3 && cardCount(1)._2 == 2 then FullHouse
-  else if cardCount(0)._2 == 3 then ThreeOfKind
-  else if cardCount(0)._2 == 2 && cardCount(1)._2 == 2 then TwoPairs
-  else if cardCount(0)._2 == 2 then OnePair
-  else HighCard
+  val cardCount: Seq[Int] =
+    cards.groupBy(identity).mapValues(_.size).values.toSeq.sortBy(-_)
+
+  cardCount match
+    case Seq(5)          => FiveOfKind
+    case Seq(4, 1)       => FourOfKind
+    case Seq(3, 2)       => FullHouse
+    case Seq(3, 1, 1)    => ThreeOfKind
+    case Seq(2, 2, 1)    => TwoPairs
+    case Seq(2, 1, 1, 1) => OnePair
+    case _               => HighCard
 end handType
 
 def handOrdering(
